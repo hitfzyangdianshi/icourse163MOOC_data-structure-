@@ -1,0 +1,77 @@
+//https://pintia.cn/problem-sets/1211841066264109056/problems/1246650197435133952
+#include<bits/stdc++.h>
+using namespace std;
+
+#define _INFINITY 32767
+#define ERROR -1
+int N, dist[1001],parent[1001],M,c[1001][1001];
+
+int FindMinDist(  )
+{  
+    int MinV, V;
+    int MinDist = _INFINITY;
+ 
+    for (V=1; V<=N; V++) {
+        if ( dist[V]!=0 && dist[V]<MinDist) {
+            MinDist = dist[V];  
+            MinV = V;  
+        }
+    }
+    if (MinDist < _INFINITY) 
+        return MinV;  
+    else return ERROR;   
+}
+ 
+int Prim( int s )
+{  
+    int TotalWeight=0;
+    int cnt=1,V,W;
+    for (V=1; V<=N; V++) {
+        /* ?????????V??W???????????Graph->G[V][W]?????INFINITY */
+           dist[V] = c[s][V];
+           parent[V] = s; /* ??????????ж??????????????0 */ 
+    }
+    dist[s] = 0;
+    parent[s] = -1; /* ?????????0 */
+ 
+    while (1) {
+        V = FindMinDist( );
+        /* V = δ???????????dist??С?? */
+        if ( V==ERROR ) /* ????????V?????? */
+            break;   /* ?????? */
+             
+        TotalWeight+=dist[V];     
+        /* ??V????????<parent[V], V>?????MST */
+		cnt++;
+        dist[V]=0;
+        for( W=1; W<=N; W++ ) /* ????е????????W */
+            if ( dist[W]!=0 && c[V][W]<dist[W]) {
+                dist[W] = c[V][W]; /* ????dist[W] */
+                parent[W] = V; /* ?????? */     
+            }
+    } /* while????*/
+    if ( cnt <N) /* MST??????????|V|?? */
+       TotalWeight = ERROR;
+    printf("%d",TotalWeight);
+    return TotalWeight;   /* ???????????????С?????????? */
+}
+
+
+int main()
+{
+	cin>>N>>M;
+	int i,j;
+	for(i=1;i<=N;i++)
+		for (j=1;j<=N;j++)
+			c[i][j]=_INFINITY;
+	int a,b,cc;
+	for(i=1;i<=M;i++)
+	{
+		cin>>a>>b>>cc;
+		c[a][b]=c[b][a]=cc;
+	}
+	Prim(1);
+	
+	return 0;
+}
+
